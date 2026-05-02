@@ -21,6 +21,16 @@ impl Default for TimerMode {
     }
 }
 
+impl TimerMode {
+    pub fn name(&self) -> &str {
+        match self {
+            TimerMode::Focus => "Focus",
+            TimerMode::ShortBreak => "Short Break",
+            TimerMode::LongBreak => "Long Break",
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub enum TimerState {
     Idle,
@@ -133,10 +143,35 @@ fn save_settings(settings: &Settings) {
     }
 }
 
+fn get_time_string(seconds: u32) -> String {
+    let mins = seconds / 60;
+    let secs = seconds % 60;
+    format!("{:02}:{:02}", mins, secs)
+}
+
+fn get_tooltip_text(state: &AppState) -> String {
+    match state.timer_state {
+        TimerState::Running => format!("⏱ {} - {} | Running", get_time_string(state.remaining_seconds), state.mode.name()),
+        TimerState::Paused => format!("⏸ {} - {} | Paused", get_time_string(state.remaining_seconds), state.mode.name()),
+        TimerState::Idle => format!("🍅 Pomodoro | {}", state.mode.name()),
+    }
+}
+
+fn update_tray_tooltip(state: &AppState) -> String {
+    get_tooltip_text(state)
+}
+
 #[tauri::command]
-fn get_state(state: State<AppStateWrapper>) -> Result<AppState, String> {
+fn get_state(app: AppHandle, state: State<AppStateWrapper>) -> Result<AppState, String> {
     let app_state = state.0.lock().map_err(|e| e.to_string())?;
-    Ok(app_state.clone())
+    let current_state = app_state.clone();
+    
+    if let Some(tray) = app.tray_by_id("main") {
+        let tooltip = get_tooltip_text(&current_state);
+        let _ = tray.set_tooltip(Some(&tooltip));
+    }
+    
+    Ok(current_state)
 }
 
 #[tauri::command]
@@ -149,6 +184,11 @@ fn start_timer(app: AppHandle, state: State<AppStateWrapper>) -> Result<AppState
     
     app_state.timer_state = TimerState::Running;
     let current_state = app_state.clone();
+    
+    if let Some(tray) = app.tray_by_id("main") {
+        let tooltip = get_tooltip_text(&current_state);
+        let _ = tray.set_tooltip(Some(&tooltip));
+    }
     
     let _ = app.emit("timer-started", &current_state);
     log::info!("Timer started: mode={:?}, remaining={}", app_state.mode, app_state.remaining_seconds);
@@ -167,6 +207,11 @@ fn pause_timer(app: AppHandle, state: State<AppStateWrapper>) -> Result<AppState
     app_state.timer_state = TimerState::Paused;
     let current_state = app_state.clone();
     
+    if let Some(tray) = app.tray_by_id("main") {
+        let tooltip = get_tooltip_text(&current_state);
+        let _ = tray.set_tooltip(Some(&tooltip));
+    }
+    
     let _ = app.emit("timer-paused", &current_state);
     log::info!("Timer paused");
     
@@ -180,6 +225,11 @@ fn reset_timer(app: AppHandle, state: State<AppStateWrapper>) -> Result<AppState
     app_state.timer_state = TimerState::Idle;
     app_state.remaining_seconds = app_state.get_duration_for_mode(app_state.mode);
     let current_state = app_state.clone();
+    
+    if let Some(tray) = app.tray_by_id("main") {
+        let tooltip = get_tooltip_text(&current_state);
+        let _ = tray.set_tooltip(Some(&tooltip));
+    }
     
     let _ = app.emit("timer-reset", &current_state);
     log::info!("Timer reset: mode={:?}", app_state.mode);
@@ -210,10 +260,11 @@ fn tick_timer(app: AppHandle, state: State<AppStateWrapper>) -> Result<AppState,
         app_state.timer_state = TimerState::Idle;
         
         if app_state.settings.sound_enabled {
+            let body = format!("{} completed! Time for {}.", completed_mode.name(), next_mode.name());
             let _ = app.notification()
                 .builder()
                 .title("Pomodoro Timer")
-                .body(&format!("{} completed! Time for {:?}.", completed_mode.name(), next_mode))
+                .body(&body)
                 .show();
         }
         
@@ -226,19 +277,16 @@ fn tick_timer(app: AppHandle, state: State<AppStateWrapper>) -> Result<AppState,
         }
     }
     
-    let _ = app.emit("timer-tick", &app_state.clone());
+    let current_state = app_state.clone();
     
-    Ok(app_state.clone())
-}
-
-impl TimerMode {
-    pub fn name(&self) -> &str {
-        match self {
-            TimerMode::Focus => "Focus",
-            TimerMode::ShortBreak => "Short Break",
-            TimerMode::LongBreak => "Long Break",
-        }
+    if let Some(tray) = app.tray_by_id("main") {
+        let tooltip = get_tooltip_text(&current_state);
+        let _ = tray.set_tooltip(Some(&tooltip));
     }
+    
+    let _ = app.emit("timer-tick", &current_state);
+    
+    Ok(current_state)
 }
 
 fn get_next_mode(completed: &u32, current: &TimerMode, settings: &Settings) -> TimerMode {
@@ -262,6 +310,11 @@ fn set_mode(app: AppHandle, state: State<AppStateWrapper>, mode: TimerMode) -> R
     app_state.timer_state = TimerState::Idle;
     app_state.remaining_seconds = app_state.get_duration_for_mode(mode);
     let current_state = app_state.clone();
+    
+    if let Some(tray) = app.tray_by_id("main") {
+        let tooltip = get_tooltip_text(&current_state);
+        let _ = tray.set_tooltip(Some(&tooltip));
+    }
     
     let _ = app.emit("mode-changed", &current_state);
     log::info!("Mode changed to {:?}", mode);
@@ -314,10 +367,14 @@ fn create_tray_menu(app: &AppHandle) -> Result<Menu<tauri::Wry>, tauri::Error> {
 fn setup_tray(app: &AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let menu = create_tray_menu(app)?;
     
-    let _ = TrayIconBuilder::new()
-        .icon(app.default_window_icon().unwrap().clone())
+    let icon = app.default_window_icon()
+        .cloned()
+        .expect("Failed to load default window icon");
+    
+    TrayIconBuilder::new()
+        .icon(icon)
         .menu(&menu)
-        .tooltip("Pomodoro Timer")
+        .tooltip("🍅 Pomodoro Timer")
         .on_menu_event(|app, event| {
             let id = event.id.as_ref();
             match id {
