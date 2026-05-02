@@ -5,17 +5,20 @@ on:
     tags:
       - 'v*.*.*'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
       matrix:
         include:
           - platform: windows-latest
-            bundle: nsis
+            args: --bundles nsis
           - platform: ubuntu-latest
-            bundle: appimage
+            args: --bundles appimage
           - platform: macos-latest
-            bundle: dmg
+            args: --bundles dmg
 
     runs-on: ${{ matrix.platform }}
 
@@ -50,4 +53,4 @@ jobs:
           releaseBody: 'Automated release build for rst-timer Pomodoro Timer'
           releaseDraft: true
           prerelease: false
-          bundle: ${{ matrix.bundle }}
+          args: ${{ matrix.args }}
