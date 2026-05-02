@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Pomodoro Timer
+Comment=Minimalist Pomodoro Timer with System Tray
+Exec=pomodoro-timer
+Icon=com.pomodoro.timer
+Terminal=false
+Type=Application
+Categories=Utility;

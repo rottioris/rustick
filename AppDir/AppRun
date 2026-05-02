@@ -1,0 +1,16 @@
+#!/bin/bash
+# AppRun script for Pomodoro Timer AppImage
+# This script runs when the AppImage is executed
+
+# Get the directory where this script is located
+APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Set library path
+export LD_LIBRARY_PATH="${APP_DIR}/usr/lib:${LD_LIBRARY_PATH}"
+
+# Set XDG paths
+export XDG_DATA_DIRS="${APP_DIR}/usr/share:${XDG_DATA_DIRS}"
+export XDG_CONFIG_DIRS="${APP_DIR}/etc/xdg:${XDG_CONFIG_DIRS}"
+
+# Run the application
+exec "${APP_DIR}/usr/bin/pomodoro-timer" "$@"

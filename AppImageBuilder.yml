@@ -1,0 +1,17 @@
+appid: com.pomodoro.timer
+binary: target/release/pomodoro-timer
+name: pomodoro-timer
+version: 0.1.0
+
+runtime:
+  id: org.freedesktop.Platform
+  version: '23.08'
+  base: ubuntu:devel
+
+ingredients:
+  dist: focal
+  sources:
+    - archive.ubuntu.com/ubuntu
+  packages:
+    - libgtk-3-0
+    - libwebkit2gtk-4.1-0
