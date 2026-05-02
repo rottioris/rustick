@@ -30,3 +30,5 @@ AppDir/
 *.squashfs
 pomodoro-timer
 SPEC.md
+AppImageBuilder.yml
+create_appimage.sh

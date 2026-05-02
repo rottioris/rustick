@@ -1,0 +1,53 @@
+name: Build Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - platform: windows-latest
+            bundle: nsis
+          - platform: ubuntu-latest
+            bundle: appimage
+          - platform: macos-latest
+            bundle: dmg
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (Linux)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-action@stable
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build Tauri
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'rst-timer ${{ github.ref_name }}'
+          releaseBody: 'Automated release build for rst-timer Pomodoro Timer'
+          releaseDraft: true
+          prerelease: false
+          bundle: ${{ matrix.bundle }}
