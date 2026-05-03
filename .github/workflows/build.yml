@@ -48,7 +48,7 @@ jobs:
       - name: Set version from tag
         if: startsWith(github.ref_name, 'v')
         run: |
-          VERSION=${GITHUB_REF_NAME#v}
+          export VERSION=${GITHUB_REF_NAME#v}
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           node -e "
             const fs = require('fs');
@@ -56,17 +56,18 @@ jobs:
             config.version = '$VERSION';
             fs.writeFileSync('src-tauri/tauri.conf.json', JSON.stringify(config, null, 2));
           "
-          node -e '
-            const fs = require("fs");
-            let lines = fs.readFileSync("src-tauri/Cargo.toml", "utf8").split("\n");
+          node -e "
+            const VERSION = process.env.VERSION;
+            const fs = require('fs');
+            let lines = fs.readFileSync('src-tauri/Cargo.toml', 'utf8').split('\n');
             lines = lines.map(line => {
-              if (line.match(/^version = "[0-9]+\.[0-9]+\.[0-9]+"$/)) {
-                return `version = "$VERSION"`;
+              if (line.match(/^version = '[0-9]+\.[0-9]+\.[0-9]+'$/)) {
+                return \"version = '\" + VERSION + \"'\";
               }
               return line;
             });
-            fs.writeFileSync("src-tauri/Cargo.toml", lines.join("\n"));
-          '
+            fs.writeFileSync('src-tauri/Cargo.toml', lines.join('\n'));
+          "
           echo "Version set to $VERSION"
 
       - name: Install dependencies (Linux)
