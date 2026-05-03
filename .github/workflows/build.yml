@@ -26,6 +26,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Show versions
+        run: |
+          echo "== System =="
+          node --version
+          npm --version
+          echo "== Rust =="
+          rustc --version
+          cargo --version
+          echo "== Platform =="
+          echo ${{ matrix.platform }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
       - name: Set version from tag
         if: startsWith(github.ref_name, 'v')
         run: |
@@ -51,16 +70,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-
       - name: Install frontend dependencies
         run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+        continue-on-error: true
 
       - name: Build Tauri
         uses: tauri-apps/tauri-action@v0
