@@ -31,8 +31,8 @@ jobs:
         run: |
           VERSION=${GITHUB_REF_NAME#v}
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$VERSION\"/" src-tauri/tauri.conf.json
-          sed -i "s/version = \"[^\"]*\"/version = \"$VERSION\"/" src-tauri/Cargo.toml
+          sed -i "s|version:.*|version: \"$VERSION\"|" src-tauri/tauri.conf.json
+          sed -i "s|version =.*|version = \"$VERSION\"|" src-tauri/Cargo.toml
           echo "Version set to $VERSION"
 
       - name: Install dependencies (Linux)
@@ -44,7 +44,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
