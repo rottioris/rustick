@@ -50,28 +50,23 @@ jobs:
         env:
           TAG_VERSION: ${{ github.ref_name }}
         run: |
-          VERSION=${TAG_VERSION#v}
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
           node -e "
-            const VERSION = process.env.VERSION;
+            const VERSION = process.env.TAG_VERSION.replace(/^v/, '');
             const fs = require('fs');
+            
+            // Update tauri.conf.json
             const config = JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json', 'utf8'));
             config.version = VERSION;
             fs.writeFileSync('src-tauri/tauri.conf.json', JSON.stringify(config, null, 2));
+            
+            // Update Cargo.toml - support both single and double quotes
+            let cargo = fs.readFileSync('src-tauri/Cargo.toml', 'utf8');
+            cargo = cargo.replace(/^\"version = \\\"[0-9]+\.[0-9]+\.[0-9]+\\\"$\"/m, '\"version = \"' + VERSION + '\"');
+            cargo = cargo.replace(/^version = '[0-9]+\.[0-9]+\.[0-9]+'$/m, \"version = '\" + VERSION + \"'\");
+            fs.writeFileSync('src-tauri/Cargo.toml', cargo);
+            
+            console.log('Version set to', VERSION);
           "
-          node -e "
-            const VERSION = process.env.VERSION;
-            const fs = require('fs');
-            let lines = fs.readFileSync('src-tauri/Cargo.toml', 'utf8').split('\n');
-            lines = lines.map(line => {
-              if (line.match(/^version = '[0-9]+\.[0-9]+\.[0-9]+'$/)) {
-                return \"version = '\" + VERSION + \"'\";
-              }
-              return line;
-            });
-            fs.writeFileSync('src-tauri/Cargo.toml', lines.join('\n'));
-          "
-          echo "Version set to $VERSION"
 
       - name: Install dependencies (Linux)
         if: matrix.platform == 'ubuntu-latest'
