@@ -27,11 +27,13 @@ A cross-platform productivity timer application built with Tauri, React, and Typ
 
 ## 📥 Downloads
 
-| OS | Download | Architecture |
-|----|----------|--------------|
-| 🪟 Windows | [Rustick_x64-setup.exe](https://github.com/rottioris/rustick/releases/latest) | x64 |
-| 🐧 Linux | [Rustick_amd64.AppImage](https://github.com/rottioris/rustick/releases/latest) | x64 |
-| 🍎 macOS | [Rustick_aarch64.dmg](https://github.com/rottioris/rustick/releases/latest) | arm64 |
+| OS | Method | Download |
+|----|--------|----------|
+| 🪟 Windows | Installer | [Rustick_x64-setup.exe](https://github.com/rottioris/rustick/releases/latest) |
+| 🐧 Linux | AppImage | [Rustick_amd64.AppImage](https://github.com/rottioris/rustick/releases/latest) |
+| 🐧 Linux | AUR | `yay -S rustick` or `paru -S rustick` |
+| 🐧 Linux | .deb | [Rustick_amd64.deb](https://github.com/rottioris/rustick/releases/latest) |
+| 🍎 macOS | DMG | [Rustick_aarch64.dmg](https://github.com/rottioris/rustick/releases/latest) |
 
 > **Note**: For other architectures or portable versions, check the [Releases](https://github.com/rottioris/rustick/releases) page.
 
@@ -68,12 +70,21 @@ A cross-platform productivity timer application built with Tauri, React, and Typ
 
 ### Pre-built Binaries
 
-Download from [Releases](https://github.com/rottioris/rustick/releases):
+Download from [Releases](https://github.com/rottioris/rustick/releases) or install via package manager:
 
 ```bash
 # Linux (AppImage)
 chmod +x Rustick_*.AppImage
 ./Rustick_*.AppImage
+
+# Linux (AUR) - Arch Linux
+yay -S rustick
+# or
+paru -S rustick
+
+# Linux (.deb) - Debian/Ubuntu
+sudo dpkg -i Rustick_*.deb
+sudo apt-get install -f  # fix missing dependencies
 
 # Windows
 # Run the .exe installer
