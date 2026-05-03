@@ -10,7 +10,7 @@ Rustick への貢献に興味をお持ちいただきありがとうございま
 
 ### バグの報告
 
-1. バグが [すでに存在する](https://github.com/rottioris/rst-timer/issues) か確認します
+1. バグが [すでに存在する](https://github.com/rottioris/rustick/issues) か確認します
 2. 新しい issue をオープンします：
    - 明確なタイトル
    - 再現の手順
@@ -19,7 +19,7 @@ Rustick への貢献に興味をお持ちいただきありがとうございま
 
 ### 機能の提案
 
-1. [既存の提案](https://github.com/rottioris/rst-timer/issues) を検索します
+1. [既存の提案](https://github.com/rottioris/rustick/issues) を検索します
 2. `feature-request` としてタグ付けされた新しい issue をオープンします
 3. ユースケースと提案されたソリューションを説明します
 
@@ -72,6 +72,6 @@ npm run tauri dev
 
 ## リソース
 
-- [GitHub リポジトリ](https://github.com/rottioris/rst-timer)
-- [Issues](https://github.com/rottioris/rst-timer/issues)
-- [ディスカッション](https://github.com/rottioris/rst-timer/discussions)
+- [GitHub リポジトリ](https://github.com/rottioris/rustick)
+- [Issues](https://github.com/rottioris/rustick/issues)
+- [ディスカッション](https://github.com/rottioris/rustick/discussions)

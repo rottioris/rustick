@@ -10,7 +10,7 @@ Be respectful and constructive. We welcome contributors from all backgrounds.
 
 ### Reporting Bugs
 
-1. Check if the bug [already exists](https://github.com/rottioris/rst-timer/issues)
+1. Check if the bug [already exists](https://github.com/rottioris/rustick/issues)
 2. Open a new issue with:
    - Clear title
    - Steps to reproduce
@@ -19,7 +19,7 @@ Be respectful and constructive. We welcome contributors from all backgrounds.
 
 ### Suggesting Features
 
-1. Search [existing suggestions](https://github.com/rottioris/rst-timer/issues)
+1. Search [existing suggestions](https://github.com/rottioris/rustick/issues)
 2. Open a new issue tagged as `feature-request`
 3. Explain the use case and proposed solution
 
@@ -72,6 +72,6 @@ npm run tauri dev
 
 ## Resources
 
-- [GitHub Repository](https://github.com/rottioris/rst-timer)
-- [Issues](https://github.com/rottioris/rst-timer/issues)
-- [Discussions](https://github.com/rottioris/rst-timer/discussions)
+- [GitHub Repository](https://github.com/rottioris/rustick)
+- [Issues](https://github.com/rottioris/rustick/issues)
+- [Discussions](https://github.com/rottioris/rustick/discussions)

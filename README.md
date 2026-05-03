@@ -6,20 +6,20 @@
 <h1 align="center">🍅 Rustick</h1>
 
 <p align="center">
-  <a href="https://github.com/rottioris/rst-timer/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/rottioris/rst-timer/build.yml?style=flat&logo=github" alt="Build Status">
+  <a href="https://github.com/rottioris/rustick/actions">
+    <img src="https://img.shields.io/github/actions/workflow/status/rottioris/rustick/build.yml?style=flat&logo=github" alt="Build Status">
   </a>
-  <a href="https://github.com/rottioris/rst-timer/releases/latest">
-    <img src="https://img.shields.io/github/v/release/rottioris/rst-timer?style=flat" alt="Latest Release">
+  <a href="https://github.com/rottioris/rustick/releases/latest">
+    <img src="https://img.shields.io/github/v/release/rottioris/rustick?style=flat" alt="Latest Release">
   </a>
   <a href="./LICENSE">
-    <img src="https://img.shields.io/github/license/rottioris/rst-timer?style=flat" alt="License: MIT">
+    <img src="https://img.shields.io/github/license/rottioris/rustick?style=flat" alt="License: MIT">
   </a>
   <a href="https://tauri.app">
     <img src="https://img.shields.io/badge/Tauri-v2-blue?style=flat&logo=tauri" alt="Framework: Tauri v2">
   </a>
-  <a href="https://github.com/rottioris/rst-timer/releases">
-    <img src="https://img.shields.io/github/downloads/rottioris/rst-timer/total?style=flat" alt="Downloads">
+  <a href="https://github.com/rottioris/rustick/releases">
+    <img src="https://img.shields.io/github/downloads/rottioris/rustick/total?style=flat" alt="Downloads">
   </a>
 </p>
 
@@ -29,11 +29,11 @@ A cross-platform productivity timer application built with Tauri, React, and Typ
 
 | OS | Download | Architecture |
 |----|----------|--------------|
-| 🪟 Windows | [Rustick_x64-setup.exe](https://github.com/rottioris/rst-timer/releases/latest) | x64 |
-| 🐧 Linux | [Rustick_amd64.AppImage](https://github.com/rottioris/rst-timer/releases/latest) | x64 |
-| 🍎 macOS | [Rustick_aarch64.dmg](https://github.com/rottioris/rst-timer/releases/latest) | arm64 |
+| 🪟 Windows | [Rustick_x64-setup.exe](https://github.com/rottioris/rustick/releases/latest) | x64 |
+| 🐧 Linux | [Rustick_amd64.AppImage](https://github.com/rottioris/rustick/releases/latest) | x64 |
+| 🍎 macOS | [Rustick_aarch64.dmg](https://github.com/rottioris/rustick/releases/latest) | arm64 |
 
-> **Note**: For other architectures or portable versions, check the [Releases](https://github.com/rottioris/rst-timer/releases) page.
+> **Note**: For other architectures or portable versions, check the [Releases](https://github.com/rottioris/rustick/releases) page.
 
 ## ✨ Features
 
@@ -68,7 +68,7 @@ A cross-platform productivity timer application built with Tauri, React, and Typ
 
 ### Pre-built Binaries
 
-Download from [Releases](https://github.com/rottioris/rst-timer/releases):
+Download from [Releases](https://github.com/rottioris/rustick/releases):
 
 ```bash
 # Linux (AppImage)
@@ -106,7 +106,7 @@ sudo pacman -S webkit2gtk-4.1 libappindicator3 librsvg patchelf
 
 ```bash
 # Clone and enter directory
-git clone https://github.com/rottioris/rst-timer.git
+git clone https://github.com/rottioris/rustick.git
 cd rst-timer
 
 # Install dependencies
@@ -261,8 +261,8 @@ This project is licensed under the [MIT License](./LICENSE).
 ## 📬 Contact
 
 - **Author**: [rottioris](https://github.com/rottioris)
-- **Issues**: [Report a bug or request a feature](https://github.com/rottioris/rst-timer/issues)
-- **Discussions**: [Start a discussion](https://github.com/rottioris/rst-timer/discussions)
+- **Issues**: [Report a bug or request a feature](https://github.com/rottioris/rustick/issues)
+- **Discussions**: [Start a discussion](https://github.com/rottioris/rustick/discussions)
 
 ---
 
