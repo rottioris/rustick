@@ -26,6 +26,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set version from tag
+        if: startsWith(github.ref_name, 'v')
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$VERSION\"/" src-tauri/tauri.conf.json
+          sed -i "s/version = \"[^\"]*\"/version = \"$VERSION\"/" src-tauri/Cargo.toml
+          echo "Version set to $VERSION"
+
       - name: Install dependencies (Linux)
         if: matrix.platform == 'ubuntu-latest'
         run: |
@@ -49,8 +58,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: 'rst-timer ${{ github.ref_name }}'
-          releaseBody: 'Automated release build for rst-timer Pomodoro Timer'
+          releaseName: 'Pomodoro Timer ${{ github.ref_name }}'
+          releaseBody: 'Automated release build for Pomodoro Timer'
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}

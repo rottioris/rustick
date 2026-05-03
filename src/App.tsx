@@ -55,6 +55,27 @@ function formatTime(seconds: number): string {
   return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 }
 
+function playNotificationSound() {
+  try {
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 880;
+    oscillator.type = "sine";
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.3);
+  } catch (e) {
+    console.error("Audio play error:", e);
+  }
+}
+
 function useTheme() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
 
@@ -126,6 +147,11 @@ function App() {
       listen("timer-tick", fetchState),
       listen("mode-changed", fetchState),
       listen("timer-completed", fetchState),
+      listen("play-sound", () => {
+        if (settings.sound_enabled) {
+          playNotificationSound();
+        }
+      }),
       listen("tray-start", () => invoke("start_timer").then(fetchState)),
       listen("tray-pause", () => invoke("pause_timer").then(fetchState)),
       listen("tray-reset", () => invoke("reset_timer").then(fetchState)),
@@ -214,6 +240,10 @@ function App() {
     } catch (e) {
       console.error("Reset counter error:", e);
     }
+  };
+
+  const handleTestSound = async () => {
+    playNotificationSound();
   };
 
   if (!isLoaded) {
@@ -404,6 +434,11 @@ function App() {
                 checked={settings.sound_enabled}
                 onChange={(e) => handleSettingChange("sound_enabled", e.target.checked)}
               />
+            </div>
+            <div className="setting-item">
+              <button className="btn-test-sound" onClick={handleTestSound}>
+                Test Sound
+              </button>
             </div>
 
             <div className="settings-actions">

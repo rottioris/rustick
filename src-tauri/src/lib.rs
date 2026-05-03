@@ -262,6 +262,7 @@ fn tick_timer(app: AppHandle, state: State<AppStateWrapper>) -> Result<AppState,
                 .title("Pomodoro Timer")
                 .body(&body)
                 .show();
+            let _ = app.emit("play-sound", ());
         }
         
         let _ = app.emit("timer-completed", &app_state.clone());
